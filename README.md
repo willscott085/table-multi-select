@@ -1,50 +1,80 @@
-# React + TypeScript + Vite
+# Table Multi-Select
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository is a React-based project that allows users to perform multi-select operations within a table. The project is built with modern web development tools including Vite, TypeScript, and Tailwind CSS, and is designed for easy development, testing, and deployment.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React**: UI library for building interactive components
+- **TypeScript**: Superset of JavaScript for static typing and improved developer experience
+- **Vite**: Fast build tool for modern JavaScript frameworks
+- **Tailwind CSS**: Utility-first CSS framework for styling
+- **ESLint**: Linting tool to enforce code quality and style
+- **Vitest**: Testing framework for running unit and integration tests
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+This project uses **pnpm** as its package manager. Please ensure pnpm is installed before proceeding.
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+npm install -g pnpm
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+Then, clone the repository and install the dependencies:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+git clone <repository-url>
+cd table-multi-select
+pnpm install
 ```
+
+## Usage
+
+### Running the Development Server
+
+To start a local development server, run:
+
+```bash
+pnpm dev
+```
+
+This command will start the Vite server, allowing you to access the app at `http://localhost:5173`.
+
+### Building the Project
+
+To build the project for production, run:
+
+```bash
+pnpm build
+```
+
+This will create an optimized production build in the `dist` directory.
+
+### Previewing the Production Build
+
+After building the project, you can preview the production build by running:
+
+```bash
+pnpm preview
+```
+
+This command will start a local server to serve the production build for testing.
+
+## Testing
+
+This project uses **Vitest** for testing. To run all tests, use the following command:
+
+```bash
+pnpm test
+```
+
+## Linting
+
+To maintain code quality, **ESLint** is configured for this project. Run the following command to lint your code:
+
+```bash
+pnpm lint
+```
+
+## Additional Notes
+
+Ensure that `pnpm` version 9.8.0 or higher is installed to avoid any compatibility issues with the lock file.
