@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useMemo, useState } from "react";
 
 export default function useTableData(
   data: Record<string, string>[],
@@ -9,12 +9,21 @@ export default function useTableData(
 ): {
   dataMap: Map<string, Record<string, string>>;
   renderCol: (colValue: string, colName: string) => ReactNode;
+  selectedItems: string[];
+  selectItem: (id: string) => void;
+  deselectItem: (id: string) => void;
+  selectAllItems: () => void;
+  deselectAllItems: () => void;
 } {
-  const dataMap = data.reduce((acc, item) => {
-    const key = self.crypto.randomUUID();
-    acc.set(key, item);
-    return acc;
-  }, new Map());
+  const dataMap = useMemo(
+    () =>
+      data.reduce((acc, item) => {
+        const key = self.crypto.randomUUID();
+        acc.set(key, item);
+        return acc;
+      }, new Map()),
+    [data]
+  );
 
   const renderCol = (colValue: string, colName: string) => {
     if (renderRules.has(colName)) {
@@ -24,5 +33,27 @@ export default function useTableData(
     return colValue;
   };
 
-  return { dataMap, renderCol };
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+  const selectItem = (id: string) => setSelectedItems((prev) => [...prev, id]);
+  const deselectItem = (id: string) =>
+    setSelectedItems((prev) => prev.filter((x) => x !== id));
+
+  const selectAllItems = () => {
+    setSelectedItems([...dataMap.keys()]);
+  };
+
+  const deselectAllItems = () => {
+    setSelectedItems([]);
+  };
+
+  return {
+    dataMap,
+    renderCol,
+    selectedItems,
+    selectItem,
+    deselectItem,
+    selectAllItems,
+    deselectAllItems,
+  };
 }
