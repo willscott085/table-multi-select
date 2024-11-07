@@ -86,4 +86,20 @@ describe("Table", () => {
       expect((checkbox as HTMLInputElement).checked).toBeFalsy();
     });
   });
+
+  it("shows indetermined state", () => {
+    const { getByText, getByTestId } = render(<Table data={data} />);
+
+    fireEvent.click(getByText("Mario"));
+
+    expect(
+      (getByTestId("table-select-all") as HTMLInputElement).indeterminate
+    ).toBeTruthy();
+
+    fireEvent.click(getByText("Mario"));
+
+    expect(
+      (getByTestId("table-select-all") as HTMLInputElement).indeterminate
+    ).toBeFalsy();
+  });
 });
