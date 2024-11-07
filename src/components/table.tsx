@@ -91,7 +91,7 @@ export default function Table(props: Props) {
                 data-row={i + 1}
                 role="button"
                 className={clsx(
-                  "bg-white hover:bg-slate-100 border-b border-slate-200",
+                  "hover:bg-slate-100 border-b border-slate-200",
                   isSelected && "bg-slate-200 hover:bg-slate-300",
                   isDownloadSelectedActionHovered &&
                     isSelected &&

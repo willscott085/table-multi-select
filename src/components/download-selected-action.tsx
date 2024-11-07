@@ -81,7 +81,7 @@ export default function DownloadSelectedAction(props: Props) {
         data-testid="download-selected-action"
         data-tooltip-target="unavailable-items-tooltip"
         type="button"
-        className="flex gap-2 items-center focus:outline-none"
+        className="flex gap-2 items-center"
         onClick={handleDownloadAction}
         {...(!areAllSelectedItemsDownloadable && {
           onMouseEnter,
