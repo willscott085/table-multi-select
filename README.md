@@ -22,7 +22,7 @@ npm install -g pnpm
 Then, clone the repository and install the dependencies:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/willscott085/table-multi-select.git
 cd table-multi-select
 pnpm install
 ```
