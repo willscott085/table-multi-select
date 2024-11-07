@@ -1,8 +1,9 @@
-import { ChangeEvent, MouseEvent, ReactNode } from "react";
+import { ChangeEvent, MouseEvent, ReactNode, useState } from "react";
 
 import useTableData from "../hooks/use-table-data";
 import Checkbox from "./checkbox";
-import IconButtonWithTooltip from "./icon-button-with-tooltip";
+import DownloadSelectedAction from "./download-selected-action";
+import clsx from "clsx";
 
 type Props = {
   data: Record<string, string>[];
@@ -14,13 +15,17 @@ export default function Table(props: Props) {
 
   const {
     dataMap,
-    renderCol,
     selectedItems,
+    renderCol,
     selectItem,
     deselectItem,
     selectAllItems,
     deselectAllItems,
+    deselectItems,
   } = useTableData(data, renderRules);
+
+  const [isDownloadSelectedActionHovered, setDownloadSelectedActionHovered] =
+    useState(false);
 
   if (data.length === 0) {
     return null;
@@ -31,7 +36,7 @@ export default function Table(props: Props) {
 
   return (
     <>
-      <header className="h-10 px-4 text-left flex items-center gap-4">
+      <header className="h-12 px-4 text-left flex items-center gap-6">
         <Checkbox
           data-testid="table-select-all"
           onClick={(evt: MouseEvent<HTMLInputElement>) => {
@@ -51,15 +56,24 @@ export default function Table(props: Props) {
             ? `${selectedItems.length} Selected`
             : "None Selected"}
         </span>
+        <div>
+          <DownloadSelectedAction
+            selectedItems={selectedItems}
+            dataMap={dataMap}
+            deselectItems={deselectItems}
+            onMouseEnter={() => setDownloadSelectedActionHovered(true)}
+            onMouseLeave={() => setDownloadSelectedActionHovered(false)}
+          />
+        </div>
       </header>
-      <table className="block table-auto w-full">
+      <table className="block table-auto w-full text-sm">
         <thead>
-          <tr>
-            <th className="h-10 px-4 border-b border-slate-500 text-left capitalize" />
+          <tr className="bg-slate-50 text-gray-500">
+            <th className="h-12 px-4 border-b border-slate-300 text-left capitalize" />
             {cols.map((colName) => (
               <th
                 key={colName}
-                className="h-10 px-4 border-b border-slate-500 text-left capitalize"
+                className="h-12 px-4 border-b border-slate-300 text-left capitalize"
               >
                 {colName}
               </th>
@@ -67,35 +81,49 @@ export default function Table(props: Props) {
           </tr>
         </thead>
         <tbody data-testid="table-body">
-          {dataArray.map(([id, row], i) => (
-            <tr key={id} data-row={i + 1} role="button">
-              <td className="h-10 px-4 border-b border-slate-500 text-left capitalize">
-                <input
-                  type="checkbox"
-                  data-testid="select-row"
-                  id={id}
-                  onChange={(evt: ChangeEvent<HTMLInputElement>) => {
-                    if (evt.target.checked) {
-                      selectItem(id);
-                    } else {
-                      deselectItem(id);
-                    }
-                  }}
-                  checked={selectedItems.includes(id)}
-                />
-              </td>
-              {cols.map((colName) => (
-                <td
-                  key={colName}
-                  className="h-10 px-4 border-b border-slate-500 text-left capitalize"
-                >
-                  <label className="flex h-full items-center" htmlFor={id}>
-                    {renderCol(row[colName], colName)}
-                  </label>
+          {dataArray.map(([id, row], i) => {
+            const isSelected = selectedItems.includes(id);
+            const isAvailable = row.status === "available";
+
+            return (
+              <tr
+                key={id}
+                data-row={i + 1}
+                role="button"
+                className={clsx(
+                  "bg-white hover:bg-slate-100 border-b border-slate-200",
+                  isSelected && "bg-slate-200 hover:bg-slate-300",
+                  isDownloadSelectedActionHovered &&
+                    isSelected &&
+                    !isAvailable &&
+                    "bg-red-50 hover:bg-red-100"
+                )}
+              >
+                <td className="h-12 px-4 text-left capitalize">
+                  <input
+                    type="checkbox"
+                    data-testid="select-row"
+                    id={id}
+                    onChange={(evt: ChangeEvent<HTMLInputElement>) => {
+                      if (evt.target.checked) {
+                        selectItem(id);
+                      } else {
+                        deselectItem(id);
+                      }
+                    }}
+                    checked={isSelected}
+                  />
                 </td>
-              ))}
-            </tr>
-          ))}
+                {cols.map((colName) => (
+                  <td key={colName} className="h-12 px-4 text-left capitalize">
+                    <label className="flex h-full items-center" htmlFor={id}>
+                      {renderCol(row[colName], colName)}
+                    </label>
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </>

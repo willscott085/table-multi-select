@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 
 import Table from "./table";
 
@@ -101,5 +101,35 @@ describe("Table", () => {
     expect(
       (getByTestId("table-select-all") as HTMLInputElement).indeterminate
     ).toBeFalsy();
+  });
+
+  it("shows warning when downloading unavailable items", () => {
+    const { getByTestId, queryByTestId } = render(<Table data={data} />);
+
+    expect(queryByTestId("unavailable-items-tooltip")).not.toBeInTheDocument();
+
+    fireEvent.click(getByTestId("table-select-all"));
+    fireEvent.mouseEnter(getByTestId("download-selected-action"));
+
+    expect(getByTestId("unavailable-items-tooltip")).toBeTruthy();
+    expect(getByTestId("unavailable-items-tooltip")).toBeVisible();
+  });
+
+  it("alerts a list of downloadable items", async () => {
+    const alertMock = vi.spyOn(window, "alert").mockImplementation(() => {});
+
+    const { getByTestId, queryByTestId } = render(<Table data={data} />);
+
+    expect(queryByTestId("unavailable-items-tooltip")).not.toBeInTheDocument();
+
+    fireEvent.click(getByTestId("table-select-all"));
+    fireEvent.click(getByTestId("download-selected-action"));
+
+    await waitFor(() => {
+      expect(alertMock).toHaveBeenCalled();
+      expect(alertMock).toHaveBeenCalledWith(
+        "\\Device\\HarddiskVolume2\\Windows\\System32\\netsh.exe | Luigi\n"
+      );
+    });
   });
 });
