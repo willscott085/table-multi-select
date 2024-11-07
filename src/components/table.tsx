@@ -1,6 +1,8 @@
 import { ChangeEvent, MouseEvent, ReactNode } from "react";
+
 import useTableData from "../hooks/use-table-data";
 import Checkbox from "./checkbox";
+import IconButtonWithTooltip from "./icon-button-with-tooltip";
 
 type Props = {
   data: Record<string, string>[];
@@ -29,8 +31,9 @@ export default function Table(props: Props) {
 
   return (
     <>
-      <header className="px-4 py-2 text-left flex gap-4">
+      <header className="h-10 px-4 text-left flex items-center gap-4">
         <Checkbox
+          data-testid="table-select-all"
           onClick={(evt: MouseEvent<HTMLInputElement>) => {
             if (evt.currentTarget.checked) {
               selectAllItems();
@@ -43,18 +46,20 @@ export default function Table(props: Props) {
             checked: selectedItems.length === data.length,
           })}
         />
-        {selectedItems.length > 0
-          ? `${selectedItems.length} Selected`
-          : "None Selected"}
+        <span data-testid="table-select-count">
+          {selectedItems.length > 0
+            ? `${selectedItems.length} Selected`
+            : "None Selected"}
+        </span>
       </header>
       <table className="block table-auto w-full">
         <thead>
           <tr>
-            <th className="px-4 py-2 border-b border-slate-500 text-left capitalize" />
+            <th className="h-10 px-4 border-b border-slate-500 text-left capitalize" />
             {cols.map((colName) => (
               <th
                 key={colName}
-                className="px-4 py-2 border-b border-slate-500 text-left capitalize"
+                className="h-10 px-4 border-b border-slate-500 text-left capitalize"
               >
                 {colName}
               </th>
@@ -64,9 +69,10 @@ export default function Table(props: Props) {
         <tbody data-testid="table-body">
           {dataArray.map(([id, row], i) => (
             <tr key={id} data-row={i + 1} role="button">
-              <td className="px-4 py-2 border-b border-slate-500 text-left capitalize">
+              <td className="h-10 px-4 border-b border-slate-500 text-left capitalize">
                 <input
                   type="checkbox"
+                  data-testid="select-row"
                   id={id}
                   onChange={(evt: ChangeEvent<HTMLInputElement>) => {
                     if (evt.target.checked) {
@@ -81,9 +87,11 @@ export default function Table(props: Props) {
               {cols.map((colName) => (
                 <td
                   key={colName}
-                  className="px-4 py-2 border-b border-slate-500 text-left capitalize"
+                  className="h-10 px-4 border-b border-slate-500 text-left capitalize"
                 >
-                  <label htmlFor={id}>{renderCol(row[colName], colName)}</label>
+                  <label className="flex h-full items-center" htmlFor={id}>
+                    {renderCol(row[colName], colName)}
+                  </label>
                 </td>
               ))}
             </tr>

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import Table from "./table";
@@ -48,5 +48,42 @@ describe("Table", () => {
     );
 
     expect(screen.getByTestId("custom-wrap")).toBeDefined();
+  });
+
+  it("shows select count", () => {
+    const { getByTestId, getByText } = render(<Table data={data} />);
+
+    const text = getByTestId("table-select-count").textContent;
+
+    expect(text).toBe("None Selected");
+
+    fireEvent.click(getByText("Mario"));
+
+    expect(getByTestId("table-select-count").textContent).toBe("1 Selected");
+
+    fireEvent.click(getByText("Mario"));
+
+    expect(getByTestId("table-select-count").textContent).toBe("None Selected");
+
+    fireEvent.click(getByText("Mario"));
+    fireEvent.click(getByText("Luigi"));
+
+    expect(getByTestId("table-select-count").textContent).toBe("2 Selected");
+  });
+
+  it("selects all items", () => {
+    const { getByTestId, getAllByTestId } = render(<Table data={data} />);
+
+    fireEvent.click(getByTestId("table-select-all"));
+
+    getAllByTestId("select-row").forEach((checkbox) => {
+      expect((checkbox as HTMLInputElement).checked).toBeTruthy();
+    });
+
+    fireEvent.click(getByTestId("table-select-all"));
+
+    getAllByTestId("select-row").forEach((checkbox) => {
+      expect((checkbox as HTMLInputElement).checked).toBeFalsy();
+    });
   });
 });
