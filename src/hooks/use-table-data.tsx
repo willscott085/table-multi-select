@@ -14,6 +14,7 @@ export default function useTableData(
   deselectItem: (id: string) => void;
   selectAllItems: () => void;
   deselectAllItems: () => void;
+  deselectItems: (ids: string[]) => void;
 } {
   const dataMap = useMemo(
     () =>
@@ -47,6 +48,9 @@ export default function useTableData(
     setSelectedItems([]);
   };
 
+  const deselectItems = (ids: string[]) =>
+    setSelectedItems((prev) => prev.filter((x) => !ids.includes(x)));
+
   return {
     dataMap,
     renderCol,
@@ -55,5 +59,6 @@ export default function useTableData(
     deselectItem,
     selectAllItems,
     deselectAllItems,
+    deselectItems,
   };
 }
