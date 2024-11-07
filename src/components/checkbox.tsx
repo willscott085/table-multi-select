@@ -1,18 +1,14 @@
-import { ComponentProps, MouseEvent, useEffect, useRef } from "react";
+import { ChangeEvent, ComponentProps, useEffect, useRef } from "react";
 
 type Props = ComponentProps<"input"> & {
   checked?: boolean;
-  onChange?: (e: MouseEvent<HTMLInputElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
 export default function Checkbox(props: Props) {
-  const { checked, onChange } = props;
+  const { checked, onChange, ...rest } = props;
 
   const checkboxRef = useRef<HTMLInputElement>(null);
-
-  const handleClick = (e: MouseEvent<HTMLInputElement>) => {
-    onChange?.(e);
-  };
 
   useEffect(() => {
     if (checkboxRef.current) {
@@ -29,11 +25,6 @@ export default function Checkbox(props: Props) {
   }, [checked]);
 
   return (
-    <input
-      ref={checkboxRef}
-      type="checkbox"
-      onClick={handleClick}
-      onChange={onChange}
-    />
+    <input ref={checkboxRef} type="checkbox" onChange={onChange} {...rest} />
   );
 }
