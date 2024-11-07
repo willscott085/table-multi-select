@@ -1,13 +1,15 @@
+import { ReactNode } from "react";
 import useTableData from "../hooks/use-table-data";
 
 type Props = {
   data: Record<string, string>[];
-  onSelect?: (item?: Record<string, string>) => void;
+  renderRules?: Map<string, (colValue: string) => ReactNode>;
 };
 
 export default function Table(props: Props) {
-  const { data, onSelect } = props;
-  const { dataMap } = useTableData(data);
+  const { data, renderRules } = props;
+
+  const { dataMap, renderCol } = useTableData(data, renderRules);
 
   if (data.length === 0) {
     return null;
@@ -32,18 +34,13 @@ export default function Table(props: Props) {
       </thead>
       <tbody data-testid="table-body">
         {dataArray.map(([id, row], i) => (
-          <tr
-            key={id}
-            data-row={i + 1}
-            onClick={() => onSelect?.(dataMap.get(id))}
-            role="button"
-          >
+          <tr key={id} data-row={i + 1} role="button">
             {cols.map((colName) => (
               <td
                 key={colName}
                 className="px-4 py-2 border-b border-slate-500 text-left capitalize"
               >
-                {row[colName]}
+                {renderCol(row[colName], colName)}
               </td>
             ))}
           </tr>

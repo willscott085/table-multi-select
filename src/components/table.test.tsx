@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 
 import Table from "./table";
 
@@ -21,25 +21,32 @@ const data = [
 
 describe("Table", () => {
   it("renders correct amount of rows", () => {
-    render(<Table data={data} onSelect={() => {}} />);
+    render(<Table data={data} />);
 
     expect(screen.getByTestId("table-body").children.length).toBe(2);
   });
 
-  it("returns correct item of clicked row", () => {
-    const handleSelect = vi.fn();
-    render(<Table data={data} onSelect={handleSelect} />);
+  it("custom renders a column", () => {
+    const renderRules = new Map();
 
-    const rows = screen.getByTestId("table-body").children;
+    renderRules.set("status", (colValue: string) => (
+      <span data-testid="custom-wrap">{colValue}</span>
+    ));
 
-    fireEvent.click(rows[0]);
+    render(
+      <Table
+        data={[
+          {
+            name: "smss.exe",
+            device: "Mario",
+            path: "\\Device\\HarddiskVolume2\\Windows\\System32\\smss.exe",
+            status: "scheduled",
+          },
+        ]}
+        renderRules={renderRules}
+      />
+    );
 
-    expect(handleSelect).toHaveBeenCalledWith(data[0]);
-    expect(handleSelect).toHaveBeenCalledTimes(1);
-
-    fireEvent.click(rows[1]);
-
-    expect(handleSelect).toHaveBeenCalledWith(data[1]);
-    expect(handleSelect).toHaveBeenCalledTimes(2);
+    expect(screen.getByTestId("custom-wrap")).toBeDefined();
   });
 });
