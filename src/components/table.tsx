@@ -66,7 +66,12 @@ export default function Table(props: Props) {
           />
         </div>
       </header>
-      <table className="block table-auto w-full text-sm">
+      <table
+        className={clsx(
+          "block table-auto w-full text-sm",
+          isDownloadSelectedActionHovered && "action-hovered"
+        )}
+      >
         <thead>
           <tr className="bg-slate-50 text-gray-500">
             <th className="h-12 px-4 border-b border-slate-300 text-left capitalize" />
@@ -85,21 +90,16 @@ export default function Table(props: Props) {
             const isSelected = selectedItems.includes(id);
             const isAvailable = row.status === "available";
 
-            console.log(
-              isDownloadSelectedActionHovered && isSelected && !isAvailable
-            );
-
             return (
               <tr
                 key={id}
                 data-row={i + 1}
                 role="button"
+                data-available={isAvailable ? "true" : "false"}
+                data-selected={isSelected ? "true" : "false"}
                 className={clsx(
                   "hover:bg-slate-100 border-b border-slate-200 focus-within:bg-slate-200",
-                  isSelected &&
-                    (isDownloadSelectedActionHovered && !isAvailable
-                      ? "bg-red-50 hover:bg-red-100"
-                      : "bg-slate-200 hover:bg-slate-300")
+                  isSelected && "bg-slate-200 hover:bg-slate-300"
                 )}
               >
                 <td className="h-12 px-4 text-left capitalize">

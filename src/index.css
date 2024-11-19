@@ -3,3 +3,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .action-hovered [data-available="false"][data-selected="true"] {
+    @apply bg-red-50 hover:bg-red-100;
+  }
+}
