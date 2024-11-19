@@ -98,7 +98,7 @@ export default function Table(props: Props) {
                 data-available={isAvailable ? "true" : "false"}
                 data-selected={isSelected ? "true" : "false"}
                 className={clsx(
-                  "hover:bg-slate-100 border-b border-slate-200 focus-within:bg-slate-200",
+                  "hover:bg-slate-100 border-b border-slate-200 focus-within:shadow-[inset_0px_0px_4px_blue]",
                   isSelected && "bg-slate-200 hover:bg-slate-300"
                 )}
               >
