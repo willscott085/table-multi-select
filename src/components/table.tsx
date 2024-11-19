@@ -85,6 +85,10 @@ export default function Table(props: Props) {
             const isSelected = selectedItems.includes(id);
             const isAvailable = row.status === "available";
 
+            console.log(
+              isDownloadSelectedActionHovered && isSelected && !isAvailable
+            );
+
             return (
               <tr
                 key={id}
@@ -92,11 +96,10 @@ export default function Table(props: Props) {
                 role="button"
                 className={clsx(
                   "hover:bg-slate-100 border-b border-slate-200 focus-within:bg-slate-200",
-                  isSelected && "bg-slate-200 hover:bg-slate-300",
-                  isDownloadSelectedActionHovered &&
-                    isSelected &&
-                    !isAvailable &&
-                    "bg-red-50 hover:bg-red-100"
+                  isSelected &&
+                    (isDownloadSelectedActionHovered && !isAvailable
+                      ? "bg-red-50 hover:bg-red-100"
+                      : "bg-slate-200 hover:bg-slate-300")
                 )}
               >
                 <td className="h-12 px-4 text-left capitalize">
