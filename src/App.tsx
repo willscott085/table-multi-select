@@ -4,7 +4,9 @@ import Table from "./components/table";
 const renderRules = new Map();
 
 renderRules.set("status", (colValue: string) => (
-  <StatusBadge isActive={colValue === "available"}>{colValue}</StatusBadge>
+  <StatusBadge className="capitalize" isActive={colValue === "available"}>
+    {colValue}
+  </StatusBadge>
 ));
 
 function App() {

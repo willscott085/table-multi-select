@@ -118,7 +118,7 @@ export default function Table(props: Props) {
                   />
                 </td>
                 {cols.map((colName) => (
-                  <td key={colName} className="h-12 px-4 text-left capitalize">
+                  <td key={colName} className="h-12 px-4 text-left">
                     <label className="flex h-full items-center" htmlFor={id}>
                       {renderCol(row[colName], colName)}
                     </label>
