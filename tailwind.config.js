@@ -8,5 +8,10 @@ export default {
       },
     },
   },
+  variants: {
+    extend: {
+      backgroundColor: ["peer-focus"],
+    },
+  },
   plugins: [],
 };

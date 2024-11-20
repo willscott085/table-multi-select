@@ -80,8 +80,9 @@ export default function DownloadSelectedAction(props: Props) {
       <button
         data-testid="download-selected-action"
         data-tooltip-target="unavailable-items-tooltip"
+        aria-labelledby="unavailable-items-tooltip"
         type="button"
-        className="flex gap-2 items-center"
+        className="flex gap-2 items-center peer"
         onClick={handleDownloadAction}
         {...(!areAllSelectedItemsDownloadable && {
           onMouseEnter,
@@ -101,7 +102,7 @@ export default function DownloadSelectedAction(props: Props) {
           id="unavailable-items-tooltip"
           role="tooltip"
           data-testid="unavailable-items-tooltip"
-          className="group-hover:scale-100 absolute z-10 scale-0 inline-block px-3 py-2 text-sm text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm"
+          className="peer-focus:scale-100 group-hover:scale-100 absolute z-10 scale-0 inline-block px-3 py-2 text-sm text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm"
         >
           Some selected items cannot be downloaded, click to exlude unavailable
           items.
