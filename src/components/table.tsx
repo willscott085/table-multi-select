@@ -18,6 +18,7 @@ export default function Table(props: Props) {
     selectedItems,
     renderCol,
     selectItem,
+    sortByColName,
     deselectItem,
     selectAllItems,
     deselectAllItems,
@@ -76,12 +77,11 @@ export default function Table(props: Props) {
           <tr className="bg-slate-50 text-gray-500">
             <th className="h-12 px-4 border-b border-slate-300 text-left capitalize" />
             {cols.map((colName) => (
-              <th
+              <TableHeaderCell
                 key={colName}
-                className="h-12 px-4 border-b border-slate-300 text-left capitalize"
-              >
-                {colName}
-              </th>
+                colName={colName}
+                sortByColName={sortByColName}
+              />
             ))}
           </tr>
         </thead>
@@ -130,5 +130,29 @@ export default function Table(props: Props) {
         </tbody>
       </table>
     </>
+  );
+}
+
+type TableHeaderCellProps = {
+  colName: string;
+  sortByColName: (colName: string, order: "ASC" | "DESC") => void;
+};
+
+function TableHeaderCell(props: TableHeaderCellProps) {
+  const { colName, sortByColName } = props;
+
+  const [order, setOrder] = useState<"ASC" | "DESC">("ASC");
+
+  return (
+    <th
+      className="h-12 px-4 border-b border-slate-300 text-left capitalize"
+      role="button"
+      onClick={() => {
+        setOrder((o) => (o === "ASC" ? "DESC" : "ASC"));
+        sortByColName(colName, order);
+      }}
+    >
+      {colName}
+    </th>
   );
 }

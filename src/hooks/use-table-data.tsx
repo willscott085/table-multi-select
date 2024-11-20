@@ -11,19 +11,18 @@ export default function useTableData(
   renderCol: (colValue: string, colName: string) => ReactNode;
   selectedItems: string[];
   selectItem: (id: string) => void;
+  sortByColName: (colName: string, order: "ASC" | "DESC") => void;
   deselectItem: (id: string) => void;
   selectAllItems: () => void;
   deselectAllItems: () => void;
   deselectItems: (ids: string[]) => void;
 } {
-  const dataMap = useMemo(
-    () =>
-      data.reduce((acc, item) => {
-        const key = self.crypto.randomUUID();
-        acc.set(key, item);
-        return acc;
-      }, new Map()),
-    [data]
+  const [dataMap, setDataMap] = useState(
+    data.reduce((acc, item) => {
+      const key = self.crypto.randomUUID();
+      acc.set(key, item);
+      return acc;
+    }, new Map())
   );
 
   const renderCol = (colValue: string, colName: string) => {
@@ -51,11 +50,33 @@ export default function useTableData(
   const deselectItems = (ids: string[]) =>
     setSelectedItems((prev) => prev.filter((x) => !ids.includes(x)));
 
+  const sortByColName = (colName: string, order: "ASC" | "DESC") => {
+    const sortingFunc = {
+      ASC: (a: string, b: string) => a < b,
+      DESC: (a: string, b: string) => a > b,
+    };
+
+    const sortedData = [...dataMap.entries()].sort((a, b) => {
+      if (
+        sortingFunc[order](
+          a[1][colName].toLowerCase(),
+          b[1][colName].toLowerCase()
+        )
+      ) {
+        return -1;
+      }
+      return 1;
+    });
+
+    setDataMap(new Map(sortedData));
+  };
+
   return {
     dataMap,
     renderCol,
     selectedItems,
     selectItem,
+    sortByColName,
     deselectItem,
     selectAllItems,
     deselectAllItems,
