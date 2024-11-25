@@ -18,6 +18,7 @@ export default function Table(props: Props) {
     selectedItems,
     renderCol,
     selectItem,
+    sortByColName,
     deselectItem,
     selectAllItems,
     deselectAllItems,
@@ -66,17 +67,21 @@ export default function Table(props: Props) {
           />
         </div>
       </header>
-      <table className="block table-auto w-full text-sm">
+      <table
+        className={clsx(
+          "block table-auto w-full text-sm",
+          isDownloadSelectedActionHovered && "action-hovered"
+        )}
+      >
         <thead>
           <tr className="bg-slate-50 text-gray-500">
             <th className="h-12 px-4 border-b border-slate-300 text-left capitalize" />
             {cols.map((colName) => (
-              <th
+              <TableHeaderCell
                 key={colName}
-                className="h-12 px-4 border-b border-slate-300 text-left capitalize"
-              >
-                {colName}
-              </th>
+                colName={colName}
+                sortByColName={sortByColName}
+              />
             ))}
           </tr>
         </thead>
@@ -90,13 +95,11 @@ export default function Table(props: Props) {
                 key={id}
                 data-row={i + 1}
                 role="button"
+                data-available={isAvailable ? "true" : "false"}
+                data-selected={isSelected ? "true" : "false"}
                 className={clsx(
-                  "hover:bg-slate-100 border-b border-slate-200 focus-within:bg-slate-200",
-                  isSelected && "bg-slate-200 hover:bg-slate-300",
-                  isDownloadSelectedActionHovered &&
-                    isSelected &&
-                    !isAvailable &&
-                    "bg-red-50 hover:bg-red-100"
+                  "hover:bg-slate-100 border-b border-slate-200 focus-within:shadow-[inset_0px_0px_4px_blue]",
+                  isSelected && "bg-slate-200 hover:bg-slate-300"
                 )}
               >
                 <td className="h-12 px-4 text-left capitalize">
@@ -115,7 +118,7 @@ export default function Table(props: Props) {
                   />
                 </td>
                 {cols.map((colName) => (
-                  <td key={colName} className="h-12 px-4 text-left capitalize">
+                  <td key={colName} className="h-12 px-4 text-left">
                     <label className="flex h-full items-center" htmlFor={id}>
                       {renderCol(row[colName], colName)}
                     </label>
@@ -127,5 +130,29 @@ export default function Table(props: Props) {
         </tbody>
       </table>
     </>
+  );
+}
+
+type TableHeaderCellProps = {
+  colName: string;
+  sortByColName: (colName: string, order: "ASC" | "DESC") => void;
+};
+
+function TableHeaderCell(props: TableHeaderCellProps) {
+  const { colName, sortByColName } = props;
+
+  const [order, setOrder] = useState<"ASC" | "DESC">("ASC");
+
+  return (
+    <th
+      className="h-12 px-4 border-b border-slate-300 text-left capitalize"
+      role="button"
+      onClick={() => {
+        setOrder((o) => (o === "ASC" ? "DESC" : "ASC"));
+        sortByColName(colName, order);
+      }}
+    >
+      {colName}
+    </th>
   );
 }
